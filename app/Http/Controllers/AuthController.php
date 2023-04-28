@@ -129,7 +129,13 @@ DB::table('reset_code_passwords')->where('email' ,$passwordReset['email'])->dele
 
  }
 
+ public function logout()
+{/**@var \App\Model\MyUserModel */
+    $user=Auth::user();
+   $user->token()->revoke();
 
+    return response()->json(['message' => 'Successfully logged out']);
+}
 
 
  
