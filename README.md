@@ -29,7 +29,7 @@ cp .env.example .env
 ```
 php artisan key:generate
 ```
-
+7. make database connection
 6. Run database migrations:
 
 
