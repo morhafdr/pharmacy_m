@@ -29,22 +29,22 @@ cp .env.example .env
 ```
 php artisan key:generate
 ```
-7. make database connection
-6. Run database migrations:
+6. make database connection
+7. Run database migrations:
 
 
 ```
 php artisan migrate
 ```
 
-7. Install Passport:
+8. Install Passport:
 
 
 ```
 php artisan passport:install
 ```
 
-8. Start the server:
+9. Start the server:
 
 
 ```
