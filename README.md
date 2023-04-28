@@ -2,8 +2,10 @@
 ## Installing Laravel 9 Passport from GitHub
 
 1. Clone the repository:
-```
+``
 git clone https://github.com/morhafdr/pharmacy_m.git
+```
+2. Navigate to the project directory:
 ```
 3. Install dependencies:
 ```
