@@ -12,7 +12,7 @@ class Purchase extends Model
     use HasFactory;
     protected $fillable =[
         'name','category_id','net_price','salling_price','quantity',
-        'image','expiry_date','supplier_id',
+        'image','expiry_date','supplier_id','paracode'
     ];
 
 /**

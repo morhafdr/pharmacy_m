@@ -32,10 +32,15 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function expired(){
-        $products = Product::whereDate('expiry_date', '=', Carbon::now())->get();
-         
-        return new ProductResource($products);
+    public function expired()
+    {
+        $products = Product::whereDate('expiry_date', '<=', Carbon::now())->get();
+         if($products == null)  
+{
+    return response()->json(['message' => ' there are no expired products ']);
+}
+else 
+        return ProductResource::collection($products);
     
     }
 
@@ -44,16 +49,19 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function outstock(){
+    public function outstock()
+    {
         $products = Product::where('quantity', '<=', 0)->get();
         $product = Product::where('quantity', '<=', 0)->first();
-        // auth()->user()->notify(new StockAlert($product));
-        
-        return [
-            new ProductResource($products),
-            new ProductResource($product),
-        
-        ];
+
+        if($product == null )  
+        {
+            return response()->json(['message' => ' there are no out of stock products ']);
+        }
+else {
+        return  ProductResource::collection($products);
+          
+}
     }
        
     
@@ -97,7 +105,7 @@ class ProductController extends Controller
     public function show(Request $request, $id)
     {
        
-        $product = Product::find($id);
+        $product = Product::where('id' ,$id)->orWhere('paracode' ,$id) ->first()  ;
       
      return new ProductResource($product);
     }
@@ -152,7 +160,7 @@ class ProductController extends Controller
     }
     public function search(Request $request)
     {
-        $product = Product::orderBy('expiry_date','desc')->first();
+        // $product = Product::orderBy('expiry_date','desc')->first();
      $product = Product::where('product_name',$request->name)->orderBy('expiry_date','desc')->first();
      $product['quantity'] = Product::where('product_name',$request->name)->sum('quantity');
      return new  ProductResource($product);

@@ -26,19 +26,6 @@ class PurchaseController extends Controller
     }
 
     /*
-     * Display a create page of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-       
-        $categories = Category::get();
-        $suppliers = Supplier::get();
-      
-    }
-
-    /*
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -65,7 +52,7 @@ class PurchaseController extends Controller
 $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , $request->expiry_date)->first();
         if( $num == null)
  {       
-        Purchase::create([
+      $input =  Purchase::create([
             'name'=>$request->name,
             'category_id'=>$request->category,
             'supplier_id'=>$request->supplier,
@@ -74,16 +61,18 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
             'quantity'=>$request->quantity,
             'expiry_date'=>$request->expiry_date,
             'image'=>$imageName,
+            'paracode' => $request->paracode,
         ]);
-        $id = Purchase::query()->where('name' , $request->name)->
-        where('category_id' , $request->category)
-        ->where('expiry_date' , $request->expiry_date)->first();
+        // $id = Purchase::query()->where('name' , $request->name)->
+        // where('category_id' , $request->category)
+        // ->where('expiry_date' , $request->expiry_date)->first();
         DB::table('products')->insert([
             'product_name'=>$request->name,
             'price' => $request->salling_price,
             'quantity'=>$request->quantity,
             'expiry_date'=>$request->expiry_date,
-            'purchase_id'=>$id['id'],
+            'purchase_id'=>$input['id'],
+            'paracode' => $request->paracode,
         ]);
 
  
@@ -99,6 +88,7 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
                 'salling_price'=>$request->salling_price,
                 'quantity'=>$request->quantity,
                 'expiry_date'=>$request->expiry_date,
+                'paracode' => $request->paracode,
                 'image'=>$imageName,
             ]);
             DB::table('products')->where('product_name' ,$num['name'])
@@ -108,23 +98,10 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
             ]);
 
             return response()->json(['message' => 'quantity  has beem successsfully update']);
-            // 'quantity'=>$request->quantity,
 
         }
-      /*  $notifications = array(
-            'message'=>"Purchase has been added",
-            'alert-type'=>'success',
-        );
-        return redirect()->route('purchases')->with($notifications);*/
     }
-
-    /*
-     * Display the specified resource.
-     *@param  \Illuminate\Http\Request $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request, $id)
+    public function show($id)
     {
         $purchase = Purchase::find($id);
         return [

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('net_price');
             $table->integer('salling_price');
+            $table->string('paracode')->nullable();
             $table->integer('quantity');
             $table->text('image')->nullable();
             $table->foreignId('category_id')

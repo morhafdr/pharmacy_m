@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SupplierController;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
-*/
+*/ Route::get('p_outstock',[ProductController::class,'outstock']);
 Route::post('password/forget',[AuthController::class, 'ForgetPassword']);
 Route::post('password/reset',[AuthController::class, 'ResetPassword']);
 Route::post('login',[AuthController::class, 'Login']);
@@ -34,13 +35,16 @@ Route::group( ['middleware' => ['auth:api']],function(){
 /*
     Route::get('products',[ProductController::class,'index']);
     Route::get('products/create',[ProductController::class,'create']);
-    Route::get('expired-products',[ProductController::class,'expired']);
-    Route::get('products/{product}',[ProductController::class,'show']);
-    Route::get('outstock-products',[ProductController::class,'outstock']);
+    Route::get('expired-products',[ProductController::class,'expired']);*/
+    Route::get('products/{id}',[ProductController::class,'show']);
+   
+    Route::get('p_expired',[ProductController::class,'expired']);
     Route::post('products/create',[ProductController::class,'store']);
-    Route::post('products/{product}',[ProductController::class,'update']);*/
+    Route::post('products/{product}',[ProductController::class,'update']);
     Route::post('search',[ProductController::class,'search']);
+    Route::post('store',[InvoiceController::class,'store']);
 
+///
     Route::get('suppliers',[SupplierController::class,'index']);
     Route::post('add-supplier',[SupplierController::class,'store']);
     Route::get('suppliers/{supplier}',[SupplierController::class,'show']);
@@ -50,7 +54,7 @@ Route::group( ['middleware' => ['auth:api']],function(){
    
     Route::get('purchases',[PurchaseController::class,'index']);
     Route::post('add-purchase',[PurchaseController::class,'store']);
-    Route::get('purchases/{purchase}',[PurchaseController::class,'show']);
+    Route::get('purchases/{id}',[PurchaseController::class,'show']);
     Route::post('purchases/{purchase}/update',[PurchaseController::class,'update']);
     Route::delete('purchases{purchase}/delete',[PurchaseController::class,'destroy']);
    });
