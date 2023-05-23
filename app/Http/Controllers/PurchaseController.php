@@ -75,8 +75,13 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
             'paracode' => $request->paracode,
         ]);
 
- 
-        return response()->json(['message' => ' purchases has been successsfully create']);}
+        $notifications = array(
+            'message'=>"Purchase has been added",
+            'alert-type'=>'success',
+        );
+        return response()->json($notifications);
+        // return response()->json(['message' => ' purchases has been successsfully create']);
+    }
 
         else {
             // $newqantiaty = $num ['quantity'] + $request->quantity ;

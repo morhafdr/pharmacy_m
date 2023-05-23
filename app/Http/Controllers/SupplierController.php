@@ -37,11 +37,10 @@ class SupplierController extends Controller
     {
         $this->validate($request,[
             'name'=>'required',
-     
             'email'=>'email|string',
-            'phone'=>'max:13',
+            'phone'=>'max:13|required',
             'company'=>'max:200|required',
-            'address'=>'required|max:200',
+            'address'=>'max:200',
             'description' =>'max:200',
         ]);
         $supplier=Supplier::create([

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DebtRecordController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
@@ -25,13 +26,17 @@ Route::post('login',[AuthController::class, 'Login']);
 Route::post('register',[AuthController::class, 'Register']);
 
 
-Route::group( ['middleware' => ['auth:api']],function(){
+    Route::group( ['middleware' => ['auth:api']],function(){
+
+
+        Route::post('add-a-debt',[DebtRecordController::class,'store']);
     
     Route::get('logout',[AuthController::class, 'Logout']);
     Route::get('categories',[CategoryController::class,'index']);
     Route::post('categories',[CategoryController::class,'store']);
     Route::post('categories/{category}/update',[CategoryController::class,'update']);
     Route::delete('categories/{category}/delete',[CategoryController::class,'destroy']);
+
 /*
     Route::get('products',[ProductController::class,'index']);
     Route::get('products/create',[ProductController::class,'create']);
@@ -42,20 +47,27 @@ Route::group( ['middleware' => ['auth:api']],function(){
     Route::post('products/create',[ProductController::class,'store']);
     Route::post('products/{product}',[ProductController::class,'update']);
     Route::post('search',[ProductController::class,'search']);
-    Route::post('store',[InvoiceController::class,'store']);
 
-///
+
+
+
+    Route::post('store',[InvoiceController::class,'store']);
+    Route::post('DaySales',[InvoiceController::class,'DaySales']);
+    Route::get('TodaySales',[InvoiceController::class,'TodaySales']);
+    Route::get('Profet_T',[InvoiceController::class,'Profet_T']);
+
+
     Route::get('suppliers',[SupplierController::class,'index']);
     Route::post('add-supplier',[SupplierController::class,'store']);
     Route::get('suppliers/{supplier}',[SupplierController::class,'show']);
     Route::delete('suppliers/',[SupplierController::class,'destroy']);
     Route::put('suppliers/{supplier}}',[SupplierController::class,'update']);
 
-   
     Route::get('purchases',[PurchaseController::class,'index']);
     Route::post('add-purchase',[PurchaseController::class,'store']);
     Route::get('purchases/{id}',[PurchaseController::class,'show']);
     Route::post('purchases/{purchase}/update',[PurchaseController::class,'update']);
     Route::delete('purchases{purchase}/delete',[PurchaseController::class,'destroy']);
+
    });
    
