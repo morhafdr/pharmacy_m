@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\ResetCodePassword;
 use  App\Mail\SendCodeResetPassword;
+use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -37,9 +38,13 @@ class AuthController extends Controller
         {
           return response()->json('error',401);
         }
+  
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::query()->create($input);
+        $user->update([
+    'role_id'  => 2,
+        ]);
         $accessToken = $user->createToken('')->accessToken;
         
      return response()->json([

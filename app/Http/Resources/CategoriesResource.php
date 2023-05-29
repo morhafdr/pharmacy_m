@@ -18,7 +18,7 @@ class CategoriesResource extends JsonResource
             return [
                 'type'=> 'categories',
                 'attributes' => [
-               
+                  'id'=>$this->id,
                   'name'=> $this->name,
                 
                

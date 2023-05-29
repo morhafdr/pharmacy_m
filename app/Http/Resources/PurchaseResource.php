@@ -17,9 +17,10 @@ class PurchaseResource extends JsonResource
         return [
             'type'=> 'purchases',
             'attributes' => [
+                'id'=>$this->id,
                 'name'=>$this->name,
-                'category_id'=>$this->category,
-                'supplier_id'=>$this->supplier,
+                'category_id'=>$this->category_id,
+                'supplier_id'=>$this->supplier_id,
                 'net_price'=>$this->net_price,
                 'salling_price'=>$this->salling_price,
                 'quantity'=>$this->quantity,

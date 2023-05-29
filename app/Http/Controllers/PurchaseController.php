@@ -20,7 +20,7 @@ class PurchaseController extends Controller
     public function index()
     {
        
-        $purchases = Purchase::with('category')->get();
+        $purchases = Purchase::paginate(10);
         return PurchaseResource::collection($purchases);
     
     }
@@ -75,12 +75,15 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
             'paracode' => $request->paracode,
         ]);
 
-        $notifications = array(
-            'message'=>"Purchase has been added",
-            'alert-type'=>'success',
-        );
-        return response()->json($notifications);
+        // $notifications = array(
+        //     'message'=>"Purchase has been added",
+        //     'alert-type'=>'success',
+        // );
+        // return response()->json($notifications);
         // return response()->json(['message' => ' purchases has been successsfully create']);
+        return [
+            new PurchaseResource($input)
+          ]; 
     }
 
         else {

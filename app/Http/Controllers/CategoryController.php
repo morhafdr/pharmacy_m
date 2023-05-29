@@ -85,11 +85,6 @@ class CategoryController extends Controller
     {
         $category = Category::find($request->id);
         $category->delete();
-        
-       /* $notification=array(
-            'message'=>"Category has been deleted",
-            'alert-type'=>'success',
-        );
-        return back()->with($notification);*/
+      
     }
 }

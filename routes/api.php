@@ -25,14 +25,18 @@ Route::post('password/reset',[AuthController::class, 'ResetPassword']);
 Route::post('login',[AuthController::class, 'Login']);
 Route::post('register',[AuthController::class, 'Register']);
 
+Route::group( ['middleware' => [ 'auth:api' , 'access']],
+   function()
+{
+    Route::delete('Delete-suppliers/{supplier}',[SupplierController::class,'destroy'])->name('delete-supplier');});
+
 
     Route::group( ['middleware' => ['auth:api']],function(){
-
-
+      
         Route::post('add-a-debt',[DebtRecordController::class,'store']);
     
     Route::get('logout',[AuthController::class, 'Logout']);
-    Route::get('categories',[CategoryController::class,'index']);
+    Route::get('Get-Gategorie',[CategoryController::class,'index']);
     Route::post('categories',[CategoryController::class,'store']);
     Route::post('categories/{category}/update',[CategoryController::class,'update']);
     Route::delete('categories/{category}/delete',[CategoryController::class,'destroy']);
@@ -60,8 +64,9 @@ Route::post('register',[AuthController::class, 'Register']);
     Route::get('suppliers',[SupplierController::class,'index']);
     Route::post('add-supplier',[SupplierController::class,'store']);
     Route::get('suppliers/{supplier}',[SupplierController::class,'show']);
-    Route::delete('suppliers/',[SupplierController::class,'destroy']);
-    Route::put('suppliers/{supplier}}',[SupplierController::class,'update']);
+  
+    
+    Route::post('Update-supplier/{supplier}',[SupplierController::class,'update']);
 
     Route::get('purchases',[PurchaseController::class,'index']);
     Route::post('add-purchase',[PurchaseController::class,'store']);
@@ -70,4 +75,3 @@ Route::post('register',[AuthController::class, 'Register']);
     Route::delete('purchases{purchase}/delete',[PurchaseController::class,'destroy']);
 
    });
-   

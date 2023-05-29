@@ -35,13 +35,15 @@ class ProductController extends Controller
     public function expired()
     {
         $products = Product::whereDate('expiry_date', '<=', Carbon::now())->get();
-         if($products == null)  
+        $product = Product::whereDate('expiry_date', '<=', Carbon::now())->first();
+  if($product == null)  
 {
     return response()->json(['message' => ' there are no expired products ']);
 }
-else 
+else   
+
         return ProductResource::collection($products);
-    
+
     }
 
     /**
