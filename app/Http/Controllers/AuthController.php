@@ -9,6 +9,7 @@ use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Console\View\Components\Confirm;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Password as Password_role;
@@ -22,17 +23,17 @@ use Illuminate\Support\Str;
 class AuthController extends Controller
 
 {
-    public function Register (Request $request) :JsonResponse{
+    public function UserRegister (Request $request) :JsonResponse{
     
         $validator = Validator::make($request->all(),[
             'name' =>['required' , 'max:55','string'],
             'email' =>['required' , 'email','unique:users'],
-            'password'=>['required',
-            'confirmed', // password_confirmation
+            'password'=>['required', 'confirmed', // password_confirmation
             Password_role::min(8)->
             numbers()->
             symbols()
-            ]
+        ],
+            
             ]);
         if($validator->fails())
         {
@@ -52,7 +53,36 @@ class AuthController extends Controller
              'token' =>$accessToken,
          ],200); 
          }
-
+         public function AdminRegister (Request $request) :JsonResponse{
+    
+          $validator = Validator::make($request->all(),[
+              'name' =>['required' , 'max:55','string'],
+              'email' =>['required' , 'email','unique:users'],
+              'password'=>['required', 'confirmed', // password_confirmation
+              Password_role::min(8)->
+              numbers()->
+              symbols()
+          ],
+              
+              ]);
+          if($validator->fails())
+          {
+            return response()->json('error',401);
+          }
+    
+          $input = $request->all();
+          $input['password'] = bcrypt($input['password']);
+          $user = User::query()->create($input);
+          $user->update([
+      'role_id'  => 1,
+          ]);
+          $accessToken = $user->createToken('')->accessToken;
+          
+       return response()->json([
+               'user' =>$user,
+               'token' =>$accessToken,
+           ],200); 
+           }
 
 
     public function Login (Request $request) :JsonResponse {

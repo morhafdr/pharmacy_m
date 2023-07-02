@@ -30,10 +30,10 @@ class DatabaseSeeder extends Seeder
   'name' => 'Admin',
   'description' => 'Administrator',
 ]);
-// $pharmacyRole = Role::create([
-//   'name' => 'pharmacy',
-//   'description' => 'pharmacyy',
-// ]);
+$pharmacyRole = Role::create([
+  'name' => 'pharmacy',
+  'description' => 'pharmacyy',
+]);
 
   // Create permissions
   $createUserPermission = Permission::create([

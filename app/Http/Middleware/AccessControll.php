@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Role;
 use Closure;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AccessControll
@@ -25,8 +26,8 @@ class AccessControll
 
      $hasPermission = $User_Role->check($PermissionName);
     if (!$hasPermission) {
-        abort(403, 'Unauthorized action.');
-    }
+        return response()->json(['error' => 'Unauthorized action.  '],403);
+      }
         return $next($request);
     }
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DebtRecordController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
@@ -19,12 +20,13 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
-*/ Route::get('p_outstock',[ProductController::class,'outstock']);
+*/
+ Route::get('p_outstock',[ProductController::class,'outstock']);
 Route::post('password/forget',[AuthController::class, 'ForgetPassword']);
 Route::post('password/reset',[AuthController::class, 'ResetPassword']);
 Route::post('login',[AuthController::class, 'Login']);
-Route::post('register',[AuthController::class, 'Register']);
-
+Route::post('User/register',[AuthController::class, 'UserRegister']);
+Route::post('Admin/register',[AuthController::class, 'AdminRegister']);
 Route::group( ['middleware' => [ 'auth:api' , 'access']],
    function()
 {
@@ -59,11 +61,17 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
     Route::post('DaySales',[InvoiceController::class,'DaySales']);
     Route::get('TodaySales',[InvoiceController::class,'TodaySales']);
     Route::get('Profet_T',[InvoiceController::class,'Profet_T']);
-
+    Route::get('Best-Selling',[InvoiceController::class,'BestSelling']);
 
     Route::get('suppliers',[SupplierController::class,'index']);
     Route::post('add-supplier',[SupplierController::class,'store']);
     Route::get('suppliers/{supplier}',[SupplierController::class,'show']);
+
+
+    Route::get('employees',[EmployeeController::class,'index']);
+    Route::post('add-employee',[EmployeeController::class,'store']);
+    Route::get('Get-Employee/{id}',[EmployeeController::class,'show']);
+    Route::get('Delet-Employee/{id}',[EmployeeController::class,'destroy']);
   
     
     Route::post('Update-supplier/{supplier}',[SupplierController::class,'update']);
@@ -71,7 +79,7 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
     Route::get('purchases',[PurchaseController::class,'index']);
     Route::post('add-purchase',[PurchaseController::class,'store']);
     Route::get('purchases/{id}',[PurchaseController::class,'show']);
-    Route::post('purchases/{purchase}/update',[PurchaseController::class,'update']);
-    Route::delete('purchases{purchase}/delete',[PurchaseController::class,'destroy']);
+    Route::post('update-purchases/{id}',[PurchaseController::class,'update']);
+    Route::delete('delete-purchases/{id}',[PurchaseController::class,'destroy']);
 
    });

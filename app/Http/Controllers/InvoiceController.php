@@ -121,4 +121,22 @@ public function DaySales(Request $request){
 //     }
 //     return  $pr;
 // }
+
+public function BestSelling(Request $request){
+  
+
+    
+$bestSellingProducts = DB::table('invoice_products')
+    ->select('invoice_products.product_id', 'products.product_name', 'products.quantity',
+        DB::raw('SUM(invoice_products.quantity) as total_quantity'))
+    ->join('products', 'products.id', '=', 'invoice_products.product_id')
+    ->groupBy('invoice_products.product_id', 'products.product_name', 'products.quantity')
+    ->orderBy('total_quantity', 'desc')
+    ->take(10)
+    ->get();
+return $bestSellingProducts;
+               
+}
+
+
     }
