@@ -34,9 +34,9 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
 
 
     Route::group( ['middleware' => ['auth:api']],function(){
-      
+
         Route::post('add-a-debt',[DebtRecordController::class,'store']);
-    
+
     Route::get('logout',[AuthController::class, 'Logout']);
     Route::get('Get-Gategorie',[CategoryController::class,'index']);
     Route::post('categories',[CategoryController::class,'store']);
@@ -48,7 +48,7 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
     Route::get('products/create',[ProductController::class,'create']);
     Route::get('expired-products',[ProductController::class,'expired']);*/
     Route::get('products/{id}',[ProductController::class,'show']);
-   
+
     Route::get('p_expired',[ProductController::class,'expired']);
     Route::post('products/create',[ProductController::class,'store']);
     Route::post('products/{product}',[ProductController::class,'update']);
@@ -72,8 +72,8 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
     Route::post('add-employee',[EmployeeController::class,'store']);
     Route::get('Get-Employee/{id}',[EmployeeController::class,'show']);
     Route::get('Delet-Employee/{id}',[EmployeeController::class,'destroy']);
-  
-    
+
+
     Route::post('Update-supplier/{supplier}',[SupplierController::class,'update']);
 
     Route::get('purchases',[PurchaseController::class,'index']);
@@ -81,5 +81,19 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
     Route::get('purchases/{id}',[PurchaseController::class,'show']);
     Route::post('update-purchases/{id}',[PurchaseController::class,'update']);
     Route::delete('delete-purchases/{id}',[PurchaseController::class,'destroy']);
+
+//customer
+    Route::get('customers',[CustomerController::class,'index']);
+    Route::post('add-customer',[CustomerController::class,'store']);
+    Route::get('customers/{customer}',[CustomerController::class,'show']);
+    Route::post('customers/{customer}/update',[CustomerController::class,'update']);
+    Route::post('customers/{customer}/delete',[CustomerController::class,'destroy']);
+//company
+    Route::get('companies',[CompanyController::class,'index']);
+    Route::post('add-company',[CompanyController::class,'store']);
+    Route::get('companies/{company}',[CompanyController::class,'show']);
+    Route::post('companies/{company}/update',[CompanyController::class,'update']);
+    Route::post('companies/{company}/delete',[CompanyController::class,'destroy']);
+
 
    });
