@@ -13,17 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('expery_dates', function (Blueprint $table) {
             $table->id();
-            $table->string('product_name');
-            $table->string('paracode')->nullable();
-            $table->integer('price');
-            $table->integer('quantity');
-            $table->foreignId('purchase_id')
-            -> constrained('purchases')
+            $table->foreignId('product_id')
+            -> constrained('products')
             ->cascadeOnDelete()
             ->cascadeOnUpdate();
-            $table->date('expiry_date')->nullable();
+            $table->date('expiry_date');
             $table->timestamps();
         });
     }
@@ -35,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('expery_dates');
     }
 };
