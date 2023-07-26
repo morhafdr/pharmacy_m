@@ -22,4 +22,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Invoice::class,'invoice_products');
     }
+
+public function Dates(): HasMany
+{
+    return $this->hasMany(ExperyDate::class,);
+}
 }
