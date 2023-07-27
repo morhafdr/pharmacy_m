@@ -12,6 +12,7 @@ class ExperyDate extends Model
     protected $fillable =[
         'product_id',
         'expiry_date',
+        'quantity'
     ];
 
     /**
