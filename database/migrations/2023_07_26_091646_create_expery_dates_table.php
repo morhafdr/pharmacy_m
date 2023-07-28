@@ -20,6 +20,7 @@ return new class extends Migration
             ->cascadeOnDelete()
             ->cascadeOnUpdate();
             $table->date('expiry_date');
+            $table->integer('quantity');
             $table->timestamps();
         });
     }
