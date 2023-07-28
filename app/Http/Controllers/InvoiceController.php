@@ -50,6 +50,9 @@ use Illuminate\Support\Str;
     ([
     'quantity'=> $pr->quantity   - $p['quantity'],
     ]);
+
+
+    
      $total = $input->products()->sum('total_price');
      $input->update
      ([
