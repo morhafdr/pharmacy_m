@@ -118,10 +118,14 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
 
 
             DB::table('products')->where('product_name' ,$num['name'])
-
-            ->where('expiry_date' , $num['expiry_date'])->update([
+          ->update([
             'quantity'=> $num ['quantity'] + $request->quantity,
             ]);
+
+             DB::table('expery_dates')->update([
+                'quantity'=> $num ['quantity'] + $request->quantity,
+            ]);
+
 
             return response()->json(['message' => 'quantity  has beem successsfully update']);
             }
@@ -129,15 +133,15 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
 
           else if ($DifExperyDate != null)
           {
-
+            $qty=Product::where('product_name' ,$DifExperyDate['name'])->first();
             DB::table('products')->where('product_name' ,$DifExperyDate['name'])
             ->update
             ([
 
-                'quantity'=> $DifExperyDate ['quantity'] + $request->quantity,
+                'quantity'=> $qty->quantity + $request->quantity,
 
             ]);
-            
+
             $product = Product::where('product_name', $DifExperyDate['name'])->first();
             DB::table('expery_dates')->insert([
 
@@ -146,6 +150,7 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
                 'quantity'=>$request->quantity
             ]);
 
+            return response()->json(['message' => 'quantity  has beem successsfully update']);
 
 
 
