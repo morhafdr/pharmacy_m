@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PurchaseResource;
 use App\Models\Category;
+use App\Models\ExperyDate;
+use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
@@ -19,10 +21,10 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-       
+
         $purchases = Purchase::paginate(10);
         return PurchaseResource::collection($purchases);
-    
+
     }
 
     /*
@@ -48,11 +50,21 @@ class PurchaseController extends Controller
             $imageName = time().'.'.$request->image->extension();
             $request->image->move(public_path('storage/purchases'), $imageName);
         }
+        $DifExperyDate = Purchase::query()
+        ->where('name', $request->name)
+        ->where('expiry_date', '!=', $request->expiry_date)
+        ->whereNotIn('expiry_date', [$request->expiry_date])
+        ->first();
 
 $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , $request->expiry_date)->first();
-        if( $num == null)
- {       
-      $input =  Purchase::create([
+
+
+
+        if( $num == null && $DifExperyDate == null)
+
+      {
+
+         $input =  Purchase::create([
             'name'=>$request->name,
             'category_id'=>$request->category,
             'supplier_id'=>$request->supplier,
@@ -63,10 +75,6 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
             'image'=>$imageName,
             'paracode' => $request->paracode,
         ]);
-        // $id = Purchase::query()->where('name' , $request->name)->
-        // where('category_id' , $request->category)
-        // ->where('expiry_date' , $request->expiry_date)->first();
-
 
         $product = Product::create ([
             'product_name'=>$request->name,
@@ -79,29 +87,21 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
         $Date = ExperyDate::create ([
             'product_id'=>$product['id'],
             'expiry_date'=>$request->expiry_date,
+            'quantity'=>$request->quantity
 
         ]);
-        // DB::table('products')->insert([
-        //     'product_name'=>$request->name,
-        //     'price' => $request->salling_price,
-        //     'quantity'=>$request->quantity,
-        //     'purchase_id'=>$input['id'],
-        //     'paracode' => $request->paracode,
-        // ]);
-
-        // $notifications = array(
-        //     'message'=>"Purchase has been added",
-        //     'alert-type'=>'success',
-        // );
-        // return response()->json($notifications);
-        // return response()->json(['message' => ' purchases has been successsfully create']);
         return [
             new PurchaseResource($input)
-          ]; 
-    }
+          ];
 
-        else {
-            // $newqantiaty = $num ['quantity'] + $request->quantity ;
+
+        }
+
+        else if ($num != null)
+
+        {
+
+
             Purchase::create([
                 'name'=>$request->name,
                 'category_id'=>$request->category,
@@ -112,23 +112,54 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
                 'expiry_date'=>$request->expiry_date,
                 'paracode' => $request->paracode,
                 'image'=>$imageName,
-            ]);
+
+
+                  ]);
+
+
             DB::table('products')->where('product_name' ,$num['name'])
+
             ->where('expiry_date' , $num['expiry_date'])->update([
-               
-                'quantity'=> $num ['quantity'] + $request->quantity,
+            'quantity'=> $num ['quantity'] + $request->quantity,
             ]);
 
             return response()->json(['message' => 'quantity  has beem successsfully update']);
+            }
+
+
+          else if ($DifExperyDate != null)
+          {
+
+            DB::table('products')->where('product_name' ,$DifExperyDate['name'])
+            ->update
+            ([
+
+                'quantity'=> $DifExperyDate ['quantity'] + $request->quantity,
+
+            ]);
+            
+            $product = Product::where('product_name', $DifExperyDate['name'])->first();
+            DB::table('expery_dates')->insert([
+
+                'product_id'=>$product['id'],
+                'expiry_date'=>$request->expiry_date,
+                'quantity'=>$request->quantity
+            ]);
+
+
+
+
 
         }
+
+
     }
     public function show($id)
     {
         $purchase = Purchase::find($id);
         return [
             new PurchaseResource($purchase)
-          ]; 
+          ];
 
     }
     /*
@@ -167,15 +198,15 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
        ]);
        return [
         new PurchaseResource($purchase)
-      ]; 
-      
+      ];
+
    }
 
    public function destroy(Request $request)
    {
        $purchase = Purchase::find($request->id);
        $purchase->delete();
-     
+
    }
 
 }
