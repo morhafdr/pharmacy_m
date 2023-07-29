@@ -10,6 +10,8 @@ use Illuminate\Validation\Rule;
 
 class CustomerController extends Controller
 {
+
+    
     /**
      * Display a listing of the resource.
      *

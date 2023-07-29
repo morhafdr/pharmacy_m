@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\DB;
 class PurchaseController extends Controller
 
 {
+
+
+
+
+
+    
     /*
      * Display a listing of the resource.
      *
@@ -64,7 +70,10 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
 
       {
 
-         $input =  Purchase::create([
+
+
+
+         $input =   Purchase::create([
             'name'=>$request->name,
             'category_id'=>$request->category,
             'supplier_id'=>$request->supplier,
@@ -176,15 +185,7 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
     */
    public function update(Request $request, $id)
    {
-       $this->validate($request,[
-        'name'=>'max:200',
-        'category'=>'',
-        'net_price'=>'min:1',
-        'salling_price'=>'min:1',
-        'quantity'=>'min:1',
-        'expiry_date'=>'',
-        'supplier'=>'',
-       ]);
+      
        $imageName = null;
        if($request->hasFile('image')){
            $imageName = time().'.'.$request->image->extension();
@@ -192,15 +193,16 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
        }
        $purchase = Purchase::find($id);
        $purchase->update([
-           'name'=>$request->name,
-           'category_id'=>$request->category,
-           'supplier_id'=>$request->supplier,
-           'net_price'=>$request->net_price,
-           'salling_price'=>$request->salling_price,
-           'quantity'=>$request->quantity,
-           'expiry_date'=>$request->expiry_date,
+           'name'=>($request->name) ?$request->name :$purchase->name,
+           'category_id'=>($request->category) ?$request->category :$purchase->category_id,
+           'supplier_id'=>($request->supplier) ?$request->supplier :$purchase->supplier_id,
+           'net_price'=>($request->net_price) ?$request->net_price :$purchase->net_price,
+           'salling_price'=>($request->salling_price) ?$request->salling_price :$purchase->salling_price,
+           'quantity'=>($request->quantity) ?$request->quantity :$purchase->quantity,
+           'expiry_date'=>($request->expiry_date) ?$request->expiry_date :$purchase->expiry_date,
            'image'=>$imageName,
        ]);
+      
        return [
         new PurchaseResource($purchase)
       ];

@@ -17,6 +17,10 @@ class CompanyController extends Controller
     {
        $companies= Company::paginate(10);;
        return $companies;
+
+
+
+       
     }
 
     /**

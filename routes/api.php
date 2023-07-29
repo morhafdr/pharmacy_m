@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DebtRecordController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SupplierController;
+use App\Models\Donation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -94,6 +96,11 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
     Route::get('companies/{company}',[CompanyController::class,'show']);
     Route::post('companies/{company}/update',[CompanyController::class,'update']);
     Route::post('companies/{company}/delete',[CompanyController::class,'destroy']);
-
+//donatin
+    Route::get('donations',[DonationController::class,'index']);
+    Route::post('add-donation',[DonationController::class,'store']);
+    Route::get('donations/{donation}',[DonationController::class,'show']);
+    Route::post('donations/{donation}/update',[DonationController::class,'update']);
+    Route::post('donations/{donation}/delete',[DonationController::class,'destroy']);
 
    });

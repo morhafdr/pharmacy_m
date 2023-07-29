@@ -161,7 +161,7 @@ public function DaySales(Request $request){
 
 public function BestSelling(Request $request){
 
-
+     
 
 $bestSellingProducts = DB::table('invoice_products')
     ->select('invoice_products.product_id', 'products.product_name', 'products.quantity',
