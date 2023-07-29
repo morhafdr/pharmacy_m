@@ -157,6 +157,10 @@ public function DaySales(Request $request){
 
 //     }
 //     return  $pr;
+
+//
+
+
 // }
 
 public function BestSelling(Request $request){
