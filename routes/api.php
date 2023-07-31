@@ -3,10 +3,14 @@
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DebtRecordController;
+use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfitController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SupplierController;
 use App\Models\Donation;
@@ -64,6 +68,8 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
     Route::get('TodaySales',[InvoiceController::class,'TodaySales']);
     Route::get('Profet_T',[InvoiceController::class,'Profet_T']);
     Route::get('Best-Selling',[InvoiceController::class,'BestSelling']);
+    Route::get('Daily-Purchases',[InvoiceController::class,'dailyPurchases']);
+   
 
     Route::get('suppliers',[SupplierController::class,'index']);
     Route::post('add-supplier',[SupplierController::class,'store']);
@@ -90,7 +96,7 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
     Route::get('customers/{customer}',[CustomerController::class,'show']);
     Route::post('customers/{customer}/update',[CustomerController::class,'update']);
     Route::post('customers/{customer}/delete',[CustomerController::class,'destroy']);
-//company
+// //company
     Route::get('companies',[CompanyController::class,'index']);
     Route::post('add-company',[CompanyController::class,'store']);
     Route::get('companies/{company}',[CompanyController::class,'show']);
@@ -99,8 +105,27 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
 //donatin
     Route::get('donations',[DonationController::class,'index']);
     Route::post('add-donation',[DonationController::class,'store']);
+    Route::post('add-donationFromPharmacy',[DonationController::class,'storepharmacy']);
     Route::get('donations/{donation}',[DonationController::class,'show']);
     Route::post('donations/{donation}/update',[DonationController::class,'update']);
     Route::post('donations/{donation}/delete',[DonationController::class,'destroy']);
+    Route::get('search-donations',[DonationController::class,'search']);
 
+
+    //profit_percentage
+    Route::get('profit_percentage',[ProfitController::class,'index']);
+    Route::post('add-profit_percentage',[ProfitController::class,'store']);
+    Route::get('profit_percentage/{id}',[ProfitController::class,'show']);
+    Route::post('profit_percentage-update/{id}',[ProfitController::class,'update']);
+    Route::post('profit_percentage-delete/{id}',[ProfitController::class,'destroy']);
+   
+  //discount
+
+  Route::get('discount',[DiscountController::class,'index']);
+  Route::post('add-discount',[DiscountController::class,'store']);
+  Route::get('discounts/{id}',[DiscountController::class,'show']);
+  Route::post('discount-update/{id}',[DiscountController::class,'update']);
+  Route::post('discount-delete/{id}',[DiscountController::class,'destroy']);
+ 
+    
    });

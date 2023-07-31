@@ -157,10 +157,7 @@ public function DaySales(Request $request){
 
 //     }
 //     return  $pr;
-
 //
-
-
 // }
 
 public function BestSelling(Request $request){
@@ -178,6 +175,14 @@ $bestSellingProducts = DB::table('invoice_products')
 return $bestSellingProducts;
 
 }
+public function dailyPurchases(Request $request){
+    $today_Purchases = Purchase::whereDate('created_at','=',Carbon::now())->sum('net_price');
 
+    if (!$today_Purchases) {
+        return response()->json(['message' => 'there are no purcheses'], 404);
+    }
+    return response()->json(['Purchases_value'=> $today_Purchases ]);
+
+}
 
     }

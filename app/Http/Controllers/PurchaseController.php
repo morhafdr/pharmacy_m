@@ -6,6 +6,7 @@ use App\Http\Resources\PurchaseResource;
 use App\Models\Category;
 use App\Models\ExperyDate;
 use App\Models\Product;
+use App\Models\Profit_percentage;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
@@ -45,7 +46,7 @@ class PurchaseController extends Controller
             'name'=>'required|max:200',
             'category'=>'required',
             'net_price'=>'required|min:1',
-            'salling_price'=>'required|min:1',
+            'salling_price'=>'',
             'quantity'=>'required|min:1',
             'expiry_date'=>'required',
             'supplier'=>'required',
@@ -63,7 +64,7 @@ class PurchaseController extends Controller
         ->first();
 
 $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , $request->expiry_date)->first();
-
+$pro = Profit_percentage::query()->first();
 
 
         if( $num == null && $DifExperyDate == null)
@@ -71,23 +72,23 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
       {
 
 
-
-
-         $input =   Purchase::create([
+        $input =   Purchase::create([
             'name'=>$request->name,
             'category_id'=>$request->category,
             'supplier_id'=>$request->supplier,
             'net_price'=>$request->net_price,
-            'salling_price'=>$request->salling_price,
-            'quantity'=>$request->quantity,
+            'salling_price' => isset($request->salling_price) ? $request->salling_price :
+             (($request->net_price * $pro->profit_percentage) + $request->net_price),
             'expiry_date'=>$request->expiry_date,
+            'quantity'=>$request->quantity,
             'image'=>$imageName,
             'paracode' => $request->paracode,
         ]);
-
+    
         $product = Product::create ([
             'product_name'=>$request->name,
-            'price' => $request->salling_price,
+            'price' => isset($request->salling_price) ? $request->salling_price :
+             (($request->net_price * $pro->profit_percentage) + $request->net_price),
             'quantity'=>$request->quantity,
             'purchase_id'=>$input['id'],
             'paracode' => $request->paracode,
@@ -116,7 +117,8 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
                 'category_id'=>$request->category,
                 'supplier_id'=>$request->supplier,
                 'net_price'=>$request->net_price,
-                'salling_price'=>$request->salling_price,
+                'salling_price' => isset($request->salling_price) ? $request->salling_price :
+                 (($request->net_price * $pro->profit_percentage) + $request->net_price),
                 'quantity'=>$request->quantity,
                 'expiry_date'=>$request->expiry_date,
                 'paracode' => $request->paracode,

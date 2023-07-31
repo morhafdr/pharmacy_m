@@ -34,17 +34,30 @@ class ProductController extends Controller
      */
     public function expired()
     {
-        $products = Product::whereDate('expiry_date', '<=', Carbon::now())->get();
-        $product = Product::whereDate('expiry_date', '<=', Carbon::now())->first();
-  if($product == null)  
+
+        $expiredProducts = DB::table('products')
+        ->join('expery_dates', 'products.id', '=', 'expery_dates.product_id')
+        ->where('expery_dates.expiry_date', '<', date('Y-m-d'))
+        ->select('products.product_name', 'products.price','products.paracode', 'expery_dates.expiry_date', 'expery_dates.quantity')
+        ->get();
+
+        $expiredProduct = DB::table('products')
+        ->join('expery_dates', 'products.id', '=', 'expery_dates.product_id')
+        ->where('expery_dates.expiry_date', '<', date('Y-m-d'))
+        ->select('products.product_name', 'products.price','products.paracode', 'expery_dates.expiry_date', 'expery_dates.quantity')
+        ->first();
+
+
+if($expiredProduct == null)
 {
-    return response()->json(['message' => ' there are no expired products ']);
+return response()->json(['message' => ' there are no expired products ']);
 }
-else   
+else
 
-        return ProductResource::collection($products);
-
+return $expiredProducts;
+       
     }
+    
 
     /**
      * Display a listing of out of stock resources.
@@ -64,6 +77,9 @@ else {
         return  ProductResource::collection($products);
           
 }
+
+
+
     }
        
     
