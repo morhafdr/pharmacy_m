@@ -98,10 +98,13 @@ else {
             'quantity'=>'required|min:1',
             'expiry_date'=>'required',
             'purchase_id'=>'required',
+            'category_id'=>'required',
+           
         ]);
         Product::create([
             'product_name'=>$request->product_name,
             'purchase_id'=> $request->purchase_id,
+            'category_id'=> $request->category_id,
             'price'=> $request->price,
             'quantity'=>$request->quantity,
             'expiry_date'=>$request->expiry_date,
@@ -143,6 +146,7 @@ else {
             'price'=>'required|min:1',
             'quantity'=>'required|min:1',
             'expiry_date'=>'required',
+            'category_id'=>'required',
             'purchase_id'=>'required',
         ]);
         
@@ -152,6 +156,7 @@ else {
         'price'=> $request->price,
         'quantity'=>$request->quantity,
         'expiry_date'=>$request->expiry_date,
+        'category_id'=> $request->category_id,
         ]);
     /*    $notification=array(
             'message'=>"Product has been updated",
@@ -182,6 +187,34 @@ else {
      $product = Product::where('product_name',$request->name)->orderBy('expiry_date','desc')->first();
      $product['quantity'] = Product::where('product_name',$request->name)->sum('quantity');
      return new  ProductResource($product);
+    }
+
+    public function SearchByCategory(Request $request)
+    {
+        $this->validate($request,[
+            'category_name'=>'required_without:category_id|string',
+        'category_id'=>'required_without:category_name|integer',
+        ]);
+    
+     
+        if ($request->has('category_name')) {
+            $cat = Category::query()->where('name', $request->category_name)->first();
+    
+            if ($cat) {
+                $product = Product::where('category_id', $cat->id)->get();
+                $products = Product::where('category_id', $cat->id)->first();
+            }
+        }
+         elseif ($request->has('category_id')) {
+            $product = Product::where('category_id', $request->category_id)->get();
+            $products = Product::where('category_id', $request->category_id)->first();
+        }
+    
+        if (!$products) {
+            return response()->json(['message' => 'Invalid search parameters'], 400);
+        }
+    
+        return  ProductResource::collection($product);
     }
 }
 

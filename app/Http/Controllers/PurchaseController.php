@@ -91,6 +91,7 @@ $pro = Profit_percentage::query()->first();
              (($request->net_price * $pro->profit_percentage) + $request->net_price),
             'quantity'=>$request->quantity,
             'purchase_id'=>$input['id'],
+            'category_id'=> $request->category,
             'paracode' => $request->paracode,
         ]);
 

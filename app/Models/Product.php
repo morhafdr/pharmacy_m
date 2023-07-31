@@ -13,7 +13,7 @@ class Product extends Model
     use HasFactory;
     protected $fillable =[
         'product_name','price','quantity',
-        'expiry_date','purchase_id','paracode'
+        'expiry_date','purchase_id','paracode','category_id'
     ];
     public function purchase(): HasOne
     {
@@ -28,9 +28,14 @@ public function Dates(): HasMany
 {
     return $this->hasMany(ExperyDate::class,);
 }
+public function category(): HasOne
+{
+    return $this->hasOne(Category::class,);
+}
 
 public function discount(): HasOne
 {
     return $this->hasOne(Discount::class,);
 }
+
 }

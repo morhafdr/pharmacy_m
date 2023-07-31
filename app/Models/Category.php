@@ -22,4 +22,8 @@ public function purchase(): BelongsTo
     return $this->belongsTo(Purchase::class,'category_id');
 }
 
+public function product(): BelongsTo
+{
+    return $this->belongsTo(Product::class,'category_id');
+}
 }

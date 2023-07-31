@@ -59,8 +59,7 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
     Route::post('products/create',[ProductController::class,'store']);
     Route::post('products/{product}',[ProductController::class,'update']);
     Route::post('search',[ProductController::class,'search']);
-
-
+    Route::post('SearchByCategory',[ProductController::class,'SearchByCategory']);
 
 
     Route::post('store',[InvoiceController::class,'store']);

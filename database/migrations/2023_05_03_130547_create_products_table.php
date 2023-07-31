@@ -23,6 +23,10 @@ return new class extends Migration
             -> constrained('purchases')
             ->cascadeOnDelete()
             ->cascadeOnUpdate();
+            $table->foreignId('category_id')
+            -> constrained('categories')
+            ->cascadeOnDelete()
+            ->cascadeOnUpdate();
             $table->date('expiry_date')->nullable();
             $table->timestamps();
         });
