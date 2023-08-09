@@ -160,21 +160,25 @@ public function DaySales(Request $request){
 //
 // }
 
-public function BestSelling(Request $request){
-
+public function BestSelling(Request $request){ 
+   
+ 
      
-
-$bestSellingProducts = DB::table('invoice_products')
-    ->select('invoice_products.product_id', 'products.product_name', 'products.quantity',
-        DB::raw('SUM(invoice_products.quantity) as total_quantity'))
-    ->join('products', 'products.id', '=', 'invoice_products.product_id')
-    ->groupBy('invoice_products.product_id', 'products.product_name', 'products.quantity')
-    ->orderBy('total_quantity', 'desc')
-    ->take(10)
-    ->get();
-return $bestSellingProducts;
-
-}
+    $bestSellingProducts = DB::table('invoice_products') 
+        ->select('invoice_products.product_id', 'products.product_name', 'products.quantity'  
+        , 'products.price', 'products.expiry_date', 
+     
+            DB::raw('SUM(invoice_products.quantity) as selling_quantity')) 
+     
+        ->join('products', 'products.id', '=', 'invoice_products.product_id') 
+        ->groupBy('invoice_products.product_id', 'products.product_name', 
+         'products.quantity','products.price','products.expiry_date',) 
+        ->orderBy('selling_quantity', 'desc') 
+        ->take(10) 
+        ->get(); 
+    return $bestSellingProducts; 
+                    
+    }
 public function dailyPurchases(Request $request){
     $today_Purchases = Purchase::whereDate('created_at','=',Carbon::now())->sum('net_price');
 

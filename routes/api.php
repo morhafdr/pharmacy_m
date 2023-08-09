@@ -36,7 +36,8 @@ Route::post('Admin/register',[AuthController::class, 'AdminRegister']);
 Route::group( ['middleware' => [ 'auth:api' , 'access']],
    function()
 {
-    Route::delete('Delete-suppliers/{supplier}',[SupplierController::class,'destroy'])->name('delete-supplier');});
+    Route::delete('Delete-suppliers/{supplier}',[SupplierController::class,'destroy'])->name('delete-supplier');
+});
 
 
     Route::group( ['middleware' => ['auth:api']],function(){

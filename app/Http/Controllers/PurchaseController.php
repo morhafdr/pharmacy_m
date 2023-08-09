@@ -51,12 +51,23 @@ class PurchaseController extends Controller
             'expiry_date'=>'required',
             'supplier'=>'required',
             // 'image'=>'file|image|mimes:jpg,jpeg,png,gif',
+            'image'=>'file|image|mimes:jpg,jpeg,png,gif',
         ]);
         $imageName = null;
         if($request->hasFile('image')){
             $imageName = time().'.'.$request->image->extension();
             $request->image->move(public_path('storage/purchases'), $imageName);
-        }
+
+        // if($request->hasFile('image')){
+        //     $imageName = time().'.'.$request->image->extension();
+        //     $request->image->move(public_path('storage/purchases'), $imageName);
+        // }
+        $input['image']=null;
+        if($request->file('image')){
+            $newfile=time().$request->file('image')->getClientOriginalName();
+            $file_path=$request->file('image')->storeAs('images',$newfile,'pharam');
+            $input['image'] = $file_path;
+        }}
         $DifExperyDate = Purchase::query()
         ->where('name', $request->name)
         ->where('expiry_date', '!=', $request->expiry_date)
@@ -81,7 +92,7 @@ $pro = Profit_percentage::query()->first();
              (($request->net_price * $pro->profit_percentage) + $request->net_price),
             'expiry_date'=>$request->expiry_date,
             'quantity'=>$request->quantity,
-            'image'=>$imageName,
+            'image'=>$input['image'],
             'paracode' => $request->paracode,
         ]);
     
@@ -123,8 +134,7 @@ $pro = Profit_percentage::query()->first();
                 'quantity'=>$request->quantity,
                 'expiry_date'=>$request->expiry_date,
                 'paracode' => $request->paracode,
-                'image'=>$imageName,
-
+                'image'=>$input['image'],
 
                   ]);
 
@@ -189,11 +199,9 @@ $pro = Profit_percentage::query()->first();
    public function update(Request $request, $id)
    {
       
-       $imageName = null;
-       if($request->hasFile('image')){
-           $imageName = time().'.'.$request->image->extension();
-           $request->image->move(public_path('storage/purchases'), $imageName);
-       }
+    if($request->hasFile('image')){
+        $imageName = time().'.'.$request->image->extension();
+        $request->image->move(public_path('storage/purchases'), $imageName);}
        $purchase = Purchase::find($id);
        $purchase->update([
            'name'=>($request->name) ?$request->name :$purchase->name,
