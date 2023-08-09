@@ -28,15 +28,16 @@ use Illuminate\Support\Str;
      ]);
      $data = json_decode($request->getContent(), true);
      $product = $data['products'];
-
+     
      foreach($product as $p)
      {
-
-         $pr = Product::find($p['product_id']);
-
-
+        
+         $pr=Product::find($p['product_id']);
+         
+         
      if($pr['quantity'] >= $p['quantity'] )
      {
+        
      DB::table('invoice_products')->insert
      ([
     'product_id'=>$p['product_id'],
@@ -132,8 +133,6 @@ public function TodaySales(Request $request){
 
 
     return response()->json(['sales_value' => $today_sales ]);
-
-
 }
 public function DaySales(Request $request){
     $request->validate

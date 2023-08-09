@@ -49,12 +49,18 @@ class PurchaseController extends Controller
             'quantity'=>'required|min:1',
             'expiry_date'=>'required',
             'supplier'=>'required',
-            // 'image'=>'file|image|mimes:jpg,jpeg,png,gif',
+            'image'=>'file|image|mimes:jpg,jpeg,png,gif',
         ]);
-        $imageName = null;
-        if($request->hasFile('image')){
-            $imageName = time().'.'.$request->image->extension();
-            $request->image->move(public_path('storage/purchases'), $imageName);
+        
+        // if($request->hasFile('image')){
+        //     $imageName = time().'.'.$request->image->extension();
+        //     $request->image->move(public_path('storage/purchases'), $imageName);
+        // }
+        $input['image']=null;
+        if($request->file('image')){
+            $newfile=time().$request->file('image')->getClientOriginalName();
+            $file_path=$request->file('image')->storeAs('images',$newfile,'pharam');
+            $input['image'] = $file_path;
         }
         $DifExperyDate = Purchase::query()
         ->where('name', $request->name)
@@ -81,7 +87,7 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
             'salling_price'=>$request->salling_price,
             'quantity'=>$request->quantity,
             'expiry_date'=>$request->expiry_date,
-            'image'=>$imageName,
+            'image'=>$input['image'],
             'paracode' => $request->paracode,
         ]);
 
@@ -120,7 +126,7 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
                 'quantity'=>$request->quantity,
                 'expiry_date'=>$request->expiry_date,
                 'paracode' => $request->paracode,
-                'image'=>$imageName,
+                'image'=>$input['image'],
 
 
                   ]);
@@ -186,7 +192,7 @@ $num = Purchase::query()->where('name' , $request->name)->where('expiry_date' , 
    public function update(Request $request, $id)
    {
       
-       $imageName = null;
+       
        if($request->hasFile('image')){
            $imageName = time().'.'.$request->image->extension();
            $request->image->move(public_path('storage/purchases'), $imageName);

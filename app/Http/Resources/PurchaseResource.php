@@ -25,7 +25,7 @@ class PurchaseResource extends JsonResource
                 'salling_price'=>$this->salling_price,
                 'quantity'=>$this->quantity,
                 'expiry_date'=>$this->expiry_date,
-                'image'=>$this->mageName,
+                'image'=>$this->image,
             
            
             ]];

@@ -47,18 +47,20 @@ class SupplierController extends Controller
     }
 
  
-    public function update(Request $request, Supplier $supplier)
-    {
-        $this->validate($request,[
-            'name'=>'max:200',
-            'email'=>'email|string',
-            'phone'=>'max:13',
-            'company'=>'max:200',
-            'address'=>'max:200',
-            'description' =>'max:200',
+    public function update(Request $request, $id)
+
+    { $supplier= Supplier::find($id);
+        $supplier->update([
+            'name'=>($request->name) ?$request->name :$supplier->name,
+            'emial'=>($request->emial) ?$request->emial :$supplier->emial,
+            'address'=>($request->address) ?$request->address :$supplier->address,
+            'company'=>($request->company) ?$request->company :$supplier->company,
+            'phone'=>($request->phone) ?$request->phone :$supplier->phone,
+            'description'=>($request->description) ?$request->description :$supplier->description,
+
         ]);
 
-        $supplier->update($request->all());
+       
        
         return new SupplierResource($supplier);
     }
