@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewNotification;
 use App\Http\Resources\ProductResource;
 use Carbon\Carbon;
 use App\Models\Product;
@@ -38,12 +39,14 @@ class ProductController extends Controller
         $expiredProducts = DB::table('products')
         ->join('expery_dates', 'products.id', '=', 'expery_dates.product_id')
         ->where('expery_dates.expiry_date', '<', date('Y-m-d'))
+        ->where('expery_dates.quantity', '>', 0)
         ->select('products.product_name', 'products.price','products.paracode', 'expery_dates.expiry_date', 'expery_dates.quantity')
         ->get();
 
         $expiredProduct = DB::table('products')
         ->join('expery_dates', 'products.id', '=', 'expery_dates.product_id')
         ->where('expery_dates.expiry_date', '<', date('Y-m-d'))
+        ->where('expery_dates.quantity', '>', 0)
         ->select('products.product_name', 'products.price','products.paracode', 'expery_dates.expiry_date', 'expery_dates.quantity')
         ->first();
 
@@ -74,6 +77,13 @@ return $expiredProducts;
             return response()->json(['message' => ' there are no out of stock products ']);
         }
 else {
+    
+    $message = "المنتج نفذ من الأسهم!";
+    $type = "out_of_stock";
+    
+    foreach($products as $product){
+        event(new NewNotification($product, $message, $type));
+    }
         return  ProductResource::collection($products);
           
 }

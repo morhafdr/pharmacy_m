@@ -37,6 +37,7 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
    function()
 {
     Route::delete('Delete-suppliers/{supplier}',[SupplierController::class,'destroy'])->name('delete-supplier');
+    Route::get('Get-Employee',[AuthController::class, 'GetEmployee'])->name('create-user');
 });
 
 
@@ -76,10 +77,10 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
     Route::get('suppliers/{supplier}',[SupplierController::class,'show']);
 
 
-    Route::get('employees',[EmployeeController::class,'index']);
-    Route::post('add-employee',[EmployeeController::class,'store']);
-    Route::get('Get-Employee/{id}',[EmployeeController::class,'show']);
-    Route::get('Delet-Employee/{id}',[EmployeeController::class,'destroy']);
+    // Route::get('employees',[EmployeeController::class,'index']);
+    // Route::post('add-employee',[EmployeeController::class,'store']);
+    // Route::get('Get-Employee/{id}',[EmployeeController::class,'show']);
+    // Route::get('Delet-Employee/{id}',[EmployeeController::class,'destroy']);
 
 
     Route::post('Update-supplier/{supplier}',[SupplierController::class,'update']);

@@ -171,7 +171,18 @@ DB::table('reset_code_passwords')->where('email' ,$passwordReset['email'])->dele
     $user->token()->revoke();  
     return response()->json(['seccess' => 'You Have Successfully Logout'],200);
 
+
+
      }
+
+     public function GetEmployee()
+     {
+        $user = User::query()->where('role_id'  ,2 )->get();
+        return $user;
+       
+        return response()->json([$user],200);
+    
+         }
     }
 
 
