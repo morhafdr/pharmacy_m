@@ -16,8 +16,15 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
         $table->id();
         $table->string('name');
-       
+        $table->string('email')->unique();
+        $table->string('password');
+        $table->date('birthdate'); 
+        $table->string('phone'); 
+        $table->decimal('salary'); 
+        $table->date('start_date'); // تاريخ بدء العمل
         $table->timestamps();
+       
+    
         });
     }
 

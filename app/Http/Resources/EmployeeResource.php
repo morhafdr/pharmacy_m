@@ -20,13 +20,12 @@ class EmployeeResource extends JsonResource
 
                 'id' => $this->id,
                 'name'=>$this->name,
-                'age'=> $this->age,
+                'email' => $this->email,
                 'phone'=> $this->phone,
-                'startworkdate'=>$this->startworkdate,
-                'workingdays'=>$this->workingdays,
-                'gender'=>$this->gender,
+                'start_date'=>$this->start_date,
+                'birthdate'=>$this->birthdate,
+              
                 'salary'=>$this->salary,
-                'image' =>$this->image,
             ]];
     }
 }

@@ -195,9 +195,6 @@ return [
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Pusher\Laravel\PusherServiceProvider::class,
- // Laravel Echo Service Provider
- Laravel\Echo\EchoServiceProvider::class,
 
     ],
 

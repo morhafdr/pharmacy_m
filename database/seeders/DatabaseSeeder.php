@@ -36,10 +36,23 @@ $pharmacyRole = Role::create([
 ]);
 
   // Create permissions
-  $createUserPermission = Permission::create([
-    'name' => 'create-user',
-    'description' => 'Create User',
+  $createUserPermission1 = Permission::create([
+    'name' => 'get-employee',
+    'description' => 'get-employee',
 ]);
+$createUserPermission2 = Permission::create([
+  'name' => 'create-employee',
+  'description' => 'create-employee',
+]);
+$createUserPermission3 = Permission::create([
+  'name' => 'delete-employee',
+  'description' => 'delete-employee',
+]);
+$createUserPermission = Permission::create([
+  'name' => 'show-employee',
+  'description' => 'show-employee',
+]);
+
 $editUserPermission = Permission::create([
     'name' => 'edit-user',
     'description' => 'Edit User',
@@ -52,6 +65,9 @@ $deleteUserPermission = Permission::create([
 // Assign permissions to admin role
 $adminRole->permissions()->attach([
     $createUserPermission->id,
+    $createUserPermission1->id,
+    $createUserPermission2->id,
+    $createUserPermission3->id,
     $editUserPermission->id,
     $deleteUserPermission->id,
 ]);
@@ -60,7 +76,8 @@ $adminUser = User::create([
   'name' => 'Admin',
   'email' => 'admin@gmail.com',
   'password' => bcrypt('password'),
-  'role_id' => $adminRole->id
+  'role_id' => $adminRole->id,
+  'type' => 'admin',
 ]);
 
 }

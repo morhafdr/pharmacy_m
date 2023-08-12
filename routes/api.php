@@ -31,13 +31,17 @@ use Illuminate\Support\Facades\Route;
 Route::post('password/forget',[AuthController::class, 'ForgetPassword']);
 Route::post('password/reset',[AuthController::class, 'ResetPassword']);
 Route::post('login',[AuthController::class, 'Login']);
-Route::post('User/register',[AuthController::class, 'UserRegister']);
-Route::post('Admin/register',[AuthController::class, 'AdminRegister']);
+Route::post('register',[AuthController::class, 'Register']);
+
 Route::group( ['middleware' => [ 'auth:api' , 'access']],
    function()
 {
     Route::delete('Delete-suppliers/{supplier}',[SupplierController::class,'destroy'])->name('delete-supplier');
-    Route::get('Get-Employee',[AuthController::class, 'GetEmployee'])->name('create-user');
+
+    Route::get('employees',[EmployeeController::class,'index'])->name('get-employee');
+    Route::post('add-employee',[EmployeeController::class,'store'])->name('create-employee');
+    Route::get('Get-Employee/{id}',[EmployeeController::class,'show'])->name('show-employee');
+    Route::get('Delet-Employee/{id}',[EmployeeController::class,'destroy'])->name('delete-employee');
 });
 
 
@@ -77,11 +81,7 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
     Route::get('suppliers/{supplier}',[SupplierController::class,'show']);
 
 
-    // Route::get('employees',[EmployeeController::class,'index']);
-    // Route::post('add-employee',[EmployeeController::class,'store']);
-    // Route::get('Get-Employee/{id}',[EmployeeController::class,'show']);
-    // Route::get('Delet-Employee/{id}',[EmployeeController::class,'destroy']);
-
+   
 
     Route::post('Update-supplier/{supplier}',[SupplierController::class,'update']);
 

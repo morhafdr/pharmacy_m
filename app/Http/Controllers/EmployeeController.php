@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
+use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -15,7 +17,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employee = Employee::paginate(10);
+        $employee = Employee::get();
         return EmployeeResource::collection($employee);
     }
 
@@ -38,35 +40,50 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         
-        $this->validate($request,[
-            'name'=>'required|max:200',
-            'age'=>'required|min:1',
-            'image'=>'',
-            'phone'=>'required',
-            'startworkdate'=>'required',
-            'workingdays' =>'required',
-            'gender'=>'required',
-            'salary'=>'required',
-   
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string'],
+            'email' => ['required', 'email', 'unique:employees'],
+            'password' => ['required', 'string', 'min:8'],
+            'birthdate' => ['required', 'date'],
+         
+            'phone' => ['required', 'string'],
+            'salary' => ['required', 'numeric'],
+            'start_date' => ['required', 'date'],
+         
         ]);
-       $input = Employee::create([
-            'name'=>$request->name,
-            'age'=> $request->age,
-            'phone'=> $request->phone,
-            'startworkdate'=>$request->startworkdate,
-            'gender'=>$request->gender,
-            'workingdays' =>$request->workingdays,
-
-            'salary'=>$request->salary,
-            'image' =>$request->image,
-
+    
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+    
+       
+        $employee = new Employee();
+        $employee->name = $request->input('name');
+        $employee->email = $request->input('email');
+        $employee->password = bcrypt($request->input('password'));
+        $employee->birthdate = $request->input('birthdate');
+        $employee->phone = $request->input('phone');
+        $employee->salary = $request->input('salary');
+        $employee->start_date = $request->input('start_date');
+        $employee->save();
+    
+        $user = new User();
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = bcrypt($request->input('password'));
+        $user->type = 'user' ;
+       
+        $user->save();
+        $user->update([
+            'role_id' => 1,
         ]);
 
-
-
-        return new EmployeeResource($input);
+        return response()->json([
+          
+                new EmployeeResource($employee)
+            
+        ], 200);
     }
-
     /**
      * Display the specified resource.
      *

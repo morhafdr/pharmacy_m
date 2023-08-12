@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\ResetCodePassword;
 use  App\Mail\SendCodeResetPassword;
+use App\Models\Employee;
 use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,66 +24,65 @@ use Illuminate\Support\Str;
 class AuthController extends Controller
 
 {
-    public function UserRegister (Request $request) :JsonResponse{
+    public function Register (Request $request) :JsonResponse{
     
-        $validator = Validator::make($request->all(),[
-            'name' =>['required' , 'max:55','string'],
-            'email' =>['required' , 'email','unique:users'],
-            'password'=>['required', 'confirmed', // password_confirmation
-            Password_role::min(8)->
-            numbers()->
-            symbols()
-        ],
-            
-            ]);
-        if($validator->fails())
-        {
-          return response()->json('error',401);
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'max:55', 'string'],
+            'email' => ['required', 'email', 'unique:users'],
+            'password' => [
+                'required',
+                'confirmed',
+                Password_role::min(8)->numbers()->symbols()
+            ],
+            'type' => ['required', 'in:user,admin'], 
+            'birthdate' => $request->input('type') === 'user' ? ['required', 'date'] : [],
+           
+            'phone' => $request->input('type') === 'user' ? ['required', 'string'] : [], 
+            'salary' => $request->input('type') === 'user' ? ['required', 'numeric'] : [],
+            'start_date' => $request->input('type') === 'user' ? ['required', 'date'] : [],
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json('error', 401);
         }
-  
-        $input = $request->all();
+    
+        $input = $request->only('name', 'email', 'password', 'type');
+    
         $input['password'] = bcrypt($input['password']);
         $user = User::query()->create($input);
+    
+        if ($input['type'] === 'user') {
+            $role_id = 2; 
+        } elseif ($input['type'] === 'admin') {
+            $role_id = 1;
+        } else {
+            return response()->json(['error' => 'Invalid type value.'], 401);
+        }
+    
         $user->update([
-    'role_id'  => 2,
+            'role_id' => $role_id,
         ]);
+    
         $accessToken = $user->createToken('')->accessToken;
-        
-     return response()->json([
-             'user' =>$user,
-             'token' =>$accessToken,
-         ],200); 
+    
+        if ($request->input('type') === 'user') {
+            $employee = new Employee();
+            $employee->name = $request->input('name');
+            $employee->email = $request->input('email');
+            $employee->password = bcrypt($request->input('password'));
+            $employee->birthdate = $request->input('birthdate');
+            $employee->phone = $request->input('phone');
+            $employee->salary = $request->input('salary');
+            $employee->start_date = $request->input('start_date');
+            $employee->save();
+        }
+    
+        return response()->json([
+            'user' => $user,
+            'token' => $accessToken,
+        ], 200);
          }
-         public function AdminRegister (Request $request) :JsonResponse{
-    
-          $validator = Validator::make($request->all(),[
-              'name' =>['required' , 'max:55','string'],
-              'email' =>['required' , 'email','unique:users'],
-              'password'=>['required', 'confirmed', // password_confirmation
-              Password_role::min(8)->
-              numbers()->
-              symbols()
-          ],
-              
-              ]);
-          if($validator->fails())
-          {
-            return response()->json('error',401);
-          }
-    
-          $input = $request->all();
-          $input['password'] = bcrypt($input['password']);
-          $user = User::query()->create($input);
-          $user->update([
-      'role_id'  => 1,
-          ]);
-          $accessToken = $user->createToken('')->accessToken;
-          
-       return response()->json([
-               'user' =>$user,
-               'token' =>$accessToken,
-           ],200); 
-           }
+       
 
 
     public function Login (Request $request) :JsonResponse {
@@ -175,14 +175,7 @@ DB::table('reset_code_passwords')->where('email' ,$passwordReset['email'])->dele
 
      }
 
-     public function GetEmployee()
-     {
-        $user = User::query()->where('role_id'  ,2 )->get();
-        return $user;
-       
-        return response()->json([$user],200);
-    
-         }
+   
     }
 
 
