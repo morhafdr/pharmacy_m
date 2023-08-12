@@ -50,13 +50,12 @@ class PurchaseController extends Controller
             'quantity'=>'required|min:1',
             'expiry_date'=>'required',
             'supplier'=>'required',
-            // 'image'=>'file|image|mimes:jpg,jpeg,png,gif',
             'image'=>'file|image|mimes:jpg,jpeg,png,gif',
         ]);
-        $imageName = null;
-        if($request->hasFile('image')){
-            $imageName = time().'.'.$request->image->extension();
-            $request->image->move(public_path('storage/purchases'), $imageName);
+        // $imageName = null;
+        // if($request->hasFile('image')){
+        //     $imageName = time().'.'.$request->image->extension();
+        //     $request->image->move(public_path('storage/purchases'), $imageName);
 
         // if($request->hasFile('image')){
         //     $imageName = time().'.'.$request->image->extension();
@@ -67,7 +66,7 @@ class PurchaseController extends Controller
             $newfile=time().$request->file('image')->getClientOriginalName();
             $file_path=$request->file('image')->storeAs('images',$newfile,'pharam');
             $input['image'] = $file_path;
-        }}
+        }
         $DifExperyDate = Purchase::query()
         ->where('name', $request->name)
         ->where('expiry_date', '!=', $request->expiry_date)

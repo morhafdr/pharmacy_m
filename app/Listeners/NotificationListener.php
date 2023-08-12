@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 
 class NotificationListener
 {
-    /**
+    /*
      * Create the event listener.
      *
      * @return void
@@ -20,7 +20,7 @@ class NotificationListener
         //
     }
 
-    /**
+    /*
      * Handle the event.
      *
      * @param  \App\Events\NewNotification  $event

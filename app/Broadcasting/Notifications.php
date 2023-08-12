@@ -6,7 +6,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Notifications\Notification;
 
-class Notifications extends Notification 
+class Notifications extends Notification
 {
     /**
      * Create a new channel instance.
@@ -15,18 +15,18 @@ class Notifications extends Notification
      */
     protected $product;
     protected $message;
-   
+
     public function __construct(Product $product, $message = null)
     {
         $this->product = $product;
         $this->message = $message ?? 'تم تحديث المنتج بنجاح!';
     }
-    
+
     public function via($notifiable)
     {
-        return ['database'];  // للإرسال إلى قاعدة البيانات فقط
+        return ['broadcast'];  // للإرسال إلى قاعدة البيانات فقط
     }
-   
+
     public function broadcastOn()
     {
         return ['notifications'];
@@ -44,12 +44,12 @@ class Notifications extends Notification
             'product_id' => $this->product->id,
         ];
     }
+    public function toArray($notifiable)
+{
+    return [
+        'message' => $this->message,
+        'product_id' => $this->product->id,
+    ];
+}
 
-    public function toDatabase($notifiable)
-    {
-        return [
-            'message' => $this->message,
-            'product_id' => $this->product->id,
-        ];
-    }
 }
