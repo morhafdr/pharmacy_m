@@ -23,11 +23,11 @@ return new class extends Migration
             $table->text('image')->nullable();
             $table->foreignId('category_id')
             -> constrained('categories')
-            ->cascadeOnDelete()
+          
             ->cascadeOnUpdate();
             $table->foreignId('supplier_id')
             -> constrained('suppliers')
-            ->cascadeOnDelete()
+          
             ->cascadeOnUpdate();
             $table->date('expiry_date');
               $table->timestamps();

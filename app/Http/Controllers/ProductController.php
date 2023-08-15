@@ -67,29 +67,23 @@ return $expiredProducts;
      *
      * @return \Illuminate\Http\Response
      */
-    public function outstock()
-    {
-        $products = Product::where('quantity', '<=', 0)->get();
-        $product = Product::where('quantity', '<=', 0)->first();
-
-        if($product == null )  
-        {
-            return response()->json(['message' => ' there are no out of stock products ']);
-        }
-else {
-    
-    $message = "المنتج نفذ من الأسهم!";
-    $type = "out_of_stock";
-    
-    foreach($products as $product){
-        event(new NewNotification($product, $message, $type));
-    }
-        return  ProductResource::collection($products);
-          
-}
-
-
-
+    public function outstock() 
+    { 
+        $products = Product::where('quantity', '<=', 0)->get(); 
+        $product = Product::where('quantity', '<=', 0)->first(); 
+ 
+        if($product == null ) 
+        { 
+            return response()->json(['message' => ' there are no out of stock products ']); 
+        } 
+else { 
+ 
+         return $products ; 
+ 
+} 
+ 
+ 
+ 
     }
        
     
@@ -138,7 +132,10 @@ else {
        
         $product = Product::where('id' ,$id)->orWhere('paracode' ,$id) ->first()  ;
       
-     return new ProductResource($product);
+     return 
+     [
+     $product
+     ];
     }
 
     /**
@@ -191,13 +188,21 @@ else {
         );
         return back()->with($notification);*/
     }
-    public function search(Request $request)
-    {
-        // $product = Product::orderBy('expiry_date','desc')->first();
-     $product = Product::where('product_name',$request->name)->orderBy('expiry_date','desc')->first();
-     $product['quantity'] = Product::where('product_name',$request->name)->sum('quantity');
-     return new  ProductResource($product);
-    }
+    public function search(Request $request) 
+    { 
+        $name=request('name'); 
+        if(isset($name)){ 
+            $product = Product::where('product_name', 'LIKE', '%' . $request->name . '%') 
+            ->where('quantity', '>', 0) 
+            ->get(); 
+     
+            if($product->isEmpty()){ 
+               return response()->json(['message' => ' there is no result '],202); 
+            } 
+            return response()->json($product,200); 
+           } 
+           return response()->json(['message' => ' you don'.'t send any thing'],203); 
+        }
 
     public function SearchByCategory(Request $request)
     {

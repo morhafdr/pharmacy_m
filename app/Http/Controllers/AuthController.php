@@ -35,11 +35,6 @@ class AuthController extends Controller
                 Password_role::min(8)->numbers()->symbols()
             ],
             'type' => ['required', 'in:user,admin'], 
-            'birthdate' => $request->input('type') === 'user' ? ['required', 'date'] : [],
-           
-            'phone' => $request->input('type') === 'user' ? ['required', 'string'] : [], 
-            'salary' => $request->input('type') === 'user' ? ['required', 'numeric'] : [],
-            'start_date' => $request->input('type') === 'user' ? ['required', 'date'] : [],
         ]);
     
         if ($validator->fails()) {
@@ -64,18 +59,6 @@ class AuthController extends Controller
         ]);
     
         $accessToken = $user->createToken('')->accessToken;
-    
-        if ($request->input('type') === 'user') {
-            $employee = new Employee();
-            $employee->name = $request->input('name');
-            $employee->email = $request->input('email');
-            $employee->password = bcrypt($request->input('password'));
-            $employee->birthdate = $request->input('birthdate');
-            $employee->phone = $request->input('phone');
-            $employee->salary = $request->input('salary');
-            $employee->start_date = $request->input('start_date');
-            $employee->save();
-        }
     
         return response()->json([
             'user' => $user,

@@ -60,8 +60,6 @@ class SupplierController extends Controller
 
         ]);
 
-        $supplier->update($request->all());
-
 
         return new SupplierResource($supplier);
     }

@@ -198,9 +198,7 @@ $pro = Profit_percentage::query()->first();
    public function update(Request $request, $id)
    {
       
-    if($request->hasFile('image')){
-        $imageName = time().'.'.$request->image->extension();
-        $request->image->move(public_path('storage/purchases'), $imageName);}
+
        $purchase = Purchase::find($id);
        $purchase->update([
            'name'=>($request->name) ?$request->name :$purchase->name,
@@ -210,7 +208,7 @@ $pro = Profit_percentage::query()->first();
            'salling_price'=>($request->salling_price) ?$request->salling_price :$purchase->salling_price,
            'quantity'=>($request->quantity) ?$request->quantity :$purchase->quantity,
            'expiry_date'=>($request->expiry_date) ?$request->expiry_date :$purchase->expiry_date,
-           'image'=>$imageName,
+      
        ]);
       
        return [

@@ -26,8 +26,9 @@ use Illuminate\Support\Str;
      'total_invoices_price' => 0 ,
      'customer_name' => $request->customer_name,
      ]);
-     $data = json_decode($request->getContent(), true);
-     $product = $data['products'];
+
+     
+     $product = $request->input('products');
 
      foreach($product as $p)
      {
