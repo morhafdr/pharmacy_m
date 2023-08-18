@@ -44,7 +44,8 @@ class DiscountController extends Controller
     'price' =>  $product->price   - ($product->price * $request->input('discount')),
 
         ]);
-        return response()->json(['message' => 'discount created successfully', 'data' => $dis]);
+        // , 'data' =>  $product
+        return response()->json(['message' => 'discount created successfully', 'data' => $dis ]);
     }
 
 

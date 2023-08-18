@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
     {
     public function store(Request $request)
     {
+
      $request->validate
      ([
         'customer_name'=>'required|max:200',
@@ -26,7 +27,7 @@ use Illuminate\Support\Str;
      'total_invoices_price' => 0 ,
      'customer_name' => $request->customer_name,
      ]);
-
+$productsExpired = [];
      
      $product = $request->input('products');
 
@@ -34,9 +35,14 @@ use Illuminate\Support\Str;
      {
 
          $pr = Product::find($p['product_id']);
+         $exper = DB::table('expery_dates')
+         ->where('product_id', $pr->id) 
+         ->where('quantity', '>', 0) 
+         ->orderBy('expiry_date', 'asc')
+         ->first();
 
+     if ($pr['quantity'] >= $p['quantity'] && $exper->expiry_date >= date('Y-m-d')  )
 
-     if($pr['quantity'] >= $p['quantity'] )
      {
      DB::table('invoice_products')->insert
      ([
@@ -51,41 +57,31 @@ use Illuminate\Support\Str;
     ([
     'quantity'=> $pr->quantity   - $p['quantity'],
     ]);
-
-
-
-    // تحديد عدد المنتجات التي تم بيعها
-// $quantityToSell = 10;
- // يمكن استبدال هذا بالقيمة المناسبة
-
-// استعلام للحصول على منتجات المعلم مرتبة حسب تاريخ الانتهاء بترتيب تصاعدي
 $products = DB::table('expery_dates')
-    ->where('product_id', $pr->id) // حدد هنا رقم المنتج الذي ترغب في بيعه
-    ->where('quantity', '>', 0) // حدد هنا للتأكد من أن الكمية المتوفرة أكبر من الصفر
+    ->where('product_id', $pr->id) 
+    ->where('quantity', '>', 0) 
     ->orderBy('expiry_date', 'asc')
     ->get();
 
-// التحقق من وجود منتجات متاحة للبيع
-if ($products->isNotEmpty()) {
+
+if ($products->isNotEmpty())
+{
     foreach ($products as $product) {
-        // التحقق مما إذا كانت الكمية المتاحة في التاريخ الحالي تكفي للبيع
-        if ($product->quantity >= $p['quantity']) {
-            // إذا كانت الكمية تكفي، قم بتحديثها في جدول الـ expiry_date وانتهِ من العملية
+        if ($product->quantity >= $p['quantity']) {   
             $updatedQty = $product->quantity - $p['quantity'];
             DB::table('expery_dates')
                 ->where('id', $product->id)
                 ->update(['quantity' => $updatedQty]);
-            break; // انتهِ من الحلقة بمجرد تحديث الكمية
-
-        } else {
-            // إذا لم تكن الكمية تكفي، قم بتحديث الكمية المباعة واستمر في التفكير في التواريخ اللاحقة
+            break; 
+        }
+         else {
+       
             $p['quantity'] -= $product->quantity;
             DB::table('expery_dates')
                 ->where('id', $product->id)
                ->delete();
         }
     }
-    // يمكنك الآن القيام بالإجراءات الأخرى اللازمة لعملية البيع هنا
 }
 
      $total = $input->products()->sum('total_price');
@@ -94,41 +90,29 @@ if ($products->isNotEmpty()) {
     'total_invoices_price' => $total,
      ]);
 
-
+  
 
 }
- response()->json(['message' => ' invoice has been successsfully create  ']);
-    // else
-    //  {
-    //     // $input->delete();
-    //     DB::table('invoice_products')->insert
-    //  ([
-    // 'product_id'=>$p['product_id'],
-    // 'quantity'=>$pr['quantity'],
-    // 'total_price'=>$pr['quantity'] * $pr->price,
-    // 'price' => $pr->price,
-    // 'invoice_id'=>$input['id'],
+if ( $exper->expiry_date < date('Y-m-d') ) {
 
-    // ]);
-    // Product::where('id' , $pr->id)->update
-    // ([
-    // 'quantity'=> $pr->quantity   - $pr['quantity'],
-    // ]);
-    //  $total = $input->products()->sum('total_price');
-    //  $input->update
-    //  ([
-    // 'total_invoices_price' => $total,
-    //  ]);
+    $productsExpired = $p;
+    
+    }
+    
+}
+if (!empty($productsExpired)) {
+  
 
-    //     return response()->json(['message' => ' there is not enough quantity  ', 'of the product' => $pr->product_name
-    //     , 'Quantity Available'  => $pr->quantity]);
-    // }
+   $product_id = $productsExpired['product_id'];
+   $product = Product::find($product_id);
+   if ($product) {
+    return $product->product_name. " this product is expired "  ;
+}
 }
 }
 
 public function TodaySales(Request $request){
-    // $total_expired_products = Purchase::whereDate('expiry_date', '=', Carbon::now())->count();
-    // $latest_sales = Sales::whereDate('created_at','=',Carbon::now())->get();
+    
     $today_sales = Invoice::whereDate('created_at','=',Carbon::now())->sum('total_invoices_price');
 
 
@@ -145,21 +129,6 @@ public function DaySales(Request $request){
     return response()->json(['sales_value'=> $day_sales ]);
 }
 
-// public function Profet_T(Request $request){
-//     $today_sales = Invoice::whereDate('created_at','=',Carbon::now())->sum('total_invoices_price');
-
-//     $id = Invoice::whereDate('created_at','=',Carbon::now())->get('id');
-
-//     foreach($id as $p_id)
-//     {
-
-//         $pr = $id->products()->where('invoice_id' , $p_id['id'])->get();
-
-
-//     }
-//     return  $pr;
-//
-// }
 
 public function BestSelling(Request $request){ 
    

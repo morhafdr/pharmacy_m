@@ -37,35 +37,51 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
    function()
 {
     Route::delete('Delete-suppliers/{supplier}',[SupplierController::class,'destroy'])->name('delete-supplier');
-
     Route::get('employees',[EmployeeController::class,'index'])->name('get-employee');
     Route::post('add-employee',[EmployeeController::class,'store'])->name('create-employee');
     Route::get('Get-Employee/{id}',[EmployeeController::class,'show'])->name('show-employee');
-    Route::get('Delet-Employee/{id}',[EmployeeController::class,'destroy'])->name('delete-employee');
+    Route::delete('Delet-Employee/{id}',[EmployeeController::class,'destroy'])->name('delete-employee');
+
+    //profit_percentage
+    Route::get('profit_percentage',[ProfitController::class,'index']);
+    Route::post('add-profit_percentage',[ProfitController::class,'store']);
+    Route::get('profit_percentage/{id}',[ProfitController::class,'show']);
+    Route::post('profit_percentage-update/{id}',[ProfitController::class,'update']);
+    Route::delete('profit_percentage-delete/{id}',[ProfitController::class,'destroy']);
+   
+  //discount
+
+  Route::get('discount',[DiscountController::class,'index'])->name('get-discount');;
+  Route::post('add-discount',[DiscountController::class,'store'])->name('add-discount');;
+  Route::get('discounts/{id}',[DiscountController::class,'show'])->name('show-discount');;
+  Route::post('discount-update/{id}',[DiscountController::class,'update'])->name('update-discount');;
+  Route::post('discount-delete/{id}',[DiscountController::class,'destroy'])->name('delete-discount');;
+
+  
 });
-
-
+   
     Route::group( ['middleware' => ['auth:api']],function(){
 
+        Route::get('get-debt',[DebtRecordController::class,'index']);
         Route::post('add-a-debt',[DebtRecordController::class,'store']);
-
+        Route::post('debt-update/{id}',[DebtRecordController::class,'update']);
+        Route::get('debt-search/{name}',[DebtRecordController::class,'search']);
+        Route::delete('debt-delete/{id}',[DebtRecordController::class,'destroy']);
+    
     Route::get('logout',[AuthController::class, 'Logout']);
     Route::get('Get-Gategorie',[CategoryController::class,'index']);
     Route::post('categories',[CategoryController::class,'store']);
     Route::post('categories/{category}/update',[CategoryController::class,'update']);
     Route::delete('categories/{category}/delete',[CategoryController::class,'destroy']);
 
-/*
-    Route::get('products',[ProductController::class,'index']);
-    Route::get('products/create',[ProductController::class,'create']);
-    Route::get('expired-products',[ProductController::class,'expired']);*/
+    //Product
     Route::get('products/{id}',[ProductController::class,'show']);
-
     Route::get('p_expired',[ProductController::class,'expired']);
     Route::post('products/create',[ProductController::class,'store']);
     Route::post('products/{product}',[ProductController::class,'update']);
     Route::post('search/{name}',[ProductController::class,'search']);
-    Route::post('SearchByCategory',[ProductController::class,'SearchByCategory']);
+    Route::post('SearchByCategory/{name}',[ProductController::class,'SearchByCategory']);
+    Route::get('p_outstock',[ProductController::class,'outstock']);
 
 
     Route::post('store',[InvoiceController::class,'store']);
@@ -102,31 +118,17 @@ Route::group( ['middleware' => [ 'auth:api' , 'access']],
     Route::post('add-company',[CompanyController::class,'store']);
     Route::get('companies/{company}',[CompanyController::class,'show']);
     Route::post('companies/{company}/update',[CompanyController::class,'update']);
-    Route::post('companies/{company}/delete',[CompanyController::class,'destroy']);
+    Route::delete('companies/{company}/delete',[CompanyController::class,'destroy']);
 //donatin
     Route::get('donations',[DonationController::class,'index']);
     Route::post('add-donation',[DonationController::class,'store']);
     Route::post('add-donationFromPharmacy',[DonationController::class,'storepharmacy']);
     Route::get('donations/{donation}',[DonationController::class,'show']);
     Route::post('donations/{donation}/update',[DonationController::class,'update']);
-    Route::post('donations/{donation}/delete',[DonationController::class,'destroy']);
+    Route::delete('donations/{donation}/delete',[DonationController::class,'destroy']);
     Route::get('search-donations',[DonationController::class,'search']);
 
 
-    //profit_percentage
-    Route::get('profit_percentage',[ProfitController::class,'index']);
-    Route::post('add-profit_percentage',[ProfitController::class,'store']);
-    Route::get('profit_percentage/{id}',[ProfitController::class,'show']);
-    Route::post('profit_percentage-update/{id}',[ProfitController::class,'update']);
-    Route::post('profit_percentage-delete/{id}',[ProfitController::class,'destroy']);
-   
-  //discount
-
-  Route::get('discount',[DiscountController::class,'index']);
-  Route::post('add-discount',[DiscountController::class,'store']);
-  Route::get('discounts/{id}',[DiscountController::class,'show']);
-  Route::post('discount-update/{id}',[DiscountController::class,'update']);
-  Route::post('discount-delete/{id}',[DiscountController::class,'destroy']);
  
     
    });

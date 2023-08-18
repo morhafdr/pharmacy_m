@@ -206,27 +206,19 @@ else {
 
     public function SearchByCategory(Request $request)
     {
-        $this->validate($request,[
-            'category_name'=>'required_without:category_id|string',
-        'category_id'=>'required_without:category_name|integer',
-        ]);
-    
      
-        if ($request->has('category_name')) {
-            $cat = Category::query()->where('name', $request->category_name)->first();
-    
+       
+        
+            $cat = Category::query()->where('name',$request->name)->first();
             if ($cat) {
+
                 $product = Product::where('category_id', $cat->id)->get();
                 $products = Product::where('category_id', $cat->id)->first();
             }
-        }
-         elseif ($request->has('category_id')) {
-            $product = Product::where('category_id', $request->category_id)->get();
-            $products = Product::where('category_id', $request->category_id)->first();
-        }
-    
-        if (!$products) {
-            return response()->json(['message' => 'Invalid search parameters'], 400);
+        
+        if ($products == null || $cat == null ) {
+
+            return response()->json(['message' => 'Invalid search parameters'], 202);
         }
     
         return  ProductResource::collection($product);

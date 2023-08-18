@@ -18,9 +18,7 @@ return new class extends Migration
             $table->string('customer_name')->unique();
             $table->integer('debt_value');
             $table->foreignId('invoice_id')
-            -> constrained('invoices')
-            ->cascadeOnDelete()
-            ->cascadeOnUpdate();
+            ->nullable();
             $table->date('debt_date');
             $table->timestamps();       
         });

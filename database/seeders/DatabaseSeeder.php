@@ -36,7 +36,12 @@ $pharmacyRole = Role::create([
 ]);
 
   // Create permissions
+  $createUserPermission = Permission::create([
+    'name' => 'show-employee',
+    'description' => 'show-employee',
+  ]);
   $createUserPermission1 = Permission::create([
+    
     'name' => 'get-employee',
     'description' => 'get-employee',
 ]);
@@ -48,16 +53,52 @@ $createUserPermission3 = Permission::create([
   'name' => 'delete-employee',
   'description' => 'delete-employee',
 ]);
-$createUserPermission = Permission::create([
-  'name' => 'show-employee',
-  'description' => 'show-employee',
+$createUserPermission4 = Permission::create([
+  'name' => 'get-profit_percentage',
+  'description' => 'get-profit_percentage',
+]);
+$createUserPermission5 = Permission::create([
+  'name' => 'add-profit_percentage',
+  'description' => 'add-profit_percentage',
+]);
+$createUserPermission6 = Permission::create([
+  'name' => 'show-profit_percentage',
+  'description' => 'show-profit_percentage',
+]);
+$createUserPermission7 = Permission::create([
+  'name' => 'update-profit_percentage',
+  'description' => 'update-profit_percentage',
+]);
+$createUserPermission8 = Permission::create([
+  'name' => 'delete-profit_percentage',
+  'description' => 'delete-profit_percentage',
+]);
+$createUserPermission9 = Permission::create([
+  'name' => 'get-discount',
+  'description' => 'get-discount',
+]);
+$createUserPermission10 = Permission::create([
+  'name' => 'add-discount',
+  'description' => 'add-discount',
+]);
+$createUserPermission11 = Permission::create([
+  'name' => 'show-discount',
+  'description' => 'show-discount',
+]);
+$createUserPermission12 = Permission::create([
+  'name' => 'update-discount',
+  'description' => 'update-discount',
+]);
+$createUserPermission13 = Permission::create([
+  'name' => 'delete-discount',
+  'description' => 'delete-discount',
 ]);
 
-$editUserPermission = Permission::create([
+$createUserPermission14 = Permission::create([
     'name' => 'edit-user',
     'description' => 'Edit User',
 ]);
-$deleteUserPermission = Permission::create([
+$createUserPermission15 = Permission::create([
     'name' => 'delete-supplier',
     'description' => 'Delete User',
 ]);
@@ -68,8 +109,18 @@ $adminRole->permissions()->attach([
     $createUserPermission1->id,
     $createUserPermission2->id,
     $createUserPermission3->id,
-    $editUserPermission->id,
-    $deleteUserPermission->id,
+    $createUserPermission4->id,
+    $createUserPermission5->id,  
+    $createUserPermission6->id,
+    $createUserPermission7->id,
+    $createUserPermission8->id,
+    $createUserPermission9->id,
+    $createUserPermission10->id,
+    $createUserPermission11->id,
+    $createUserPermission12->id,
+    $createUserPermission13->id,
+    $createUserPermission14->id,
+    $createUserPermission15->id,
 ]);
 // Create admin user
 $adminUser = User::create([
